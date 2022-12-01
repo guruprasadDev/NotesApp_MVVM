@@ -72,10 +72,6 @@ class MainActivity : AppCompatActivity(), NotesAdapter.NotesItemClickListener,
                 notesAdapter?.updateList(notesList)
             }
         }
-
-        viewModel?.filterListLiveData?.observe(this) { filterNoteList ->
-            notesAdapter?.updateList(filterNoteList)
-        }
     }
 
     private fun initListener() {
@@ -92,11 +88,17 @@ class MainActivity : AppCompatActivity(), NotesAdapter.NotesItemClickListener,
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
-                    viewModel?.filterList(newText)
+                    filterNotes(newText)
                 }
                 return true
             }
         })
+    }
+
+    private fun filterNotes(searchTerm: String) {
+        viewModel?.let {
+            notesAdapter?.updateList(it.filterNotes(searchTerm))
+        }
     }
 
     override fun onItemClicked(note: Note) {
