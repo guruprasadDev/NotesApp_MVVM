@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.example.ui.MainActivity">
 
     <SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/small_16dp"
         android:elevation="8dp"
         android:iconifiedByDefault="false"
         android:queryHint="Search Notes"
@@ -21,7 +21,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/small_0dp"
+        android:layout_marginBottom="@dimen/small_8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/searchView"
@@ -31,9 +33,10 @@
         android:id="@+id/fb_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="26dp"
-        android:layout_marginBottom="26dp"
+        android:layout_marginEnd="@dimen/small_24dp"
+        android:layout_marginBottom="@dimen/small_24dp"
         android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_add_24" />
