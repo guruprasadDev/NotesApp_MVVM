@@ -5,7 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import com.example.ViewModel.AddNotesViewModel
+import com.example.viewModel.AddNotesViewModel
 import com.example.data.Note
 import com.example.extensions.showToast
 import com.example.notesapp.databinding.ActivityAddNoteBinding
