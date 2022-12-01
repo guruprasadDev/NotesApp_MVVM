@@ -3,7 +3,6 @@ package com.example.viewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.data.Note
 import com.example.data.NoteDatabase
@@ -15,10 +14,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private var repository: NotesRepository
     var allNotes: LiveData<List<Note>>
     var notesList = ArrayList<Note>()
-    private val filteredNoteList = ArrayList<Note>()
-
-    private var _filterListLiveData: MutableLiveData<List<Note>> = MutableLiveData()
-    var filterListLiveData: LiveData<List<Note>> = _filterListLiveData
 
     init {
         val dao = NoteDatabase.getDatabase(application).getNoteDao()
@@ -38,16 +33,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         repository.update(note)
     }
 
-    fun filterList(searchTerm: String) {
-        filteredNoteList.clear()
-
-        for (item in notesList) {
-            if (item.title.lowercase().contains(searchTerm.lowercase())
-                || item.noteDec.lowercase().contains(searchTerm.lowercase())
-            ) {
-                filteredNoteList.add(item)
-            }
+    fun filterNotes(searchTerm: String): List<Note> {
+        val filteredNoteList = notesList.filter {
+            (it.title.lowercase().contains(searchTerm.lowercase()))
+                    || (it.noteDec.lowercase().contains(searchTerm.lowercase()))
         }
-        _filterListLiveData.value = filteredNoteList
+        return filteredNoteList
     }
 }
