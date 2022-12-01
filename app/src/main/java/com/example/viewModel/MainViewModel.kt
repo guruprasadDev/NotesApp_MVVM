@@ -1,8 +1,9 @@
-package com.example.ViewModel
+package com.example.viewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.data.Note
 import com.example.data.NoteDatabase
@@ -12,8 +13,12 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private var repository: NotesRepository
-
     var allNotes: LiveData<List<Note>>
+    var notesList = ArrayList<Note>()
+    private val filteredNoteList = ArrayList<Note>()
+
+    private var _filterListLiveData: MutableLiveData<List<Note>> = MutableLiveData()
+    var filterListLiveData: LiveData<List<Note>> = _filterListLiveData
 
     init {
         val dao = NoteDatabase.getDatabase(application).getNoteDao()
@@ -31,5 +36,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {
         repository.update(note)
+    }
+
+    fun filterList(searchTerm: String) {
+        filteredNoteList.clear()
+
+        for (item in notesList) {
+            if (item.title.lowercase().contains(searchTerm.lowercase())
+                || item.noteDec.lowercase().contains(searchTerm.lowercase())
+            ) {
+                filteredNoteList.add(item)
+            }
+        }
+        _filterListLiveData.value = filteredNoteList
     }
 }
