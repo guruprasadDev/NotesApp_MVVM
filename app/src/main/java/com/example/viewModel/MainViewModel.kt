@@ -1,4 +1,4 @@
-package com.example.ViewModel
+package com.example.viewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private var repository: NotesRepository
-
     var allNotes: LiveData<List<Note>>
+    var notesList = ArrayList<Note>()
 
     init {
         val dao = NoteDatabase.getDatabase(application).getNoteDao()
@@ -31,5 +31,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {
         repository.update(note)
+    }
+
+    fun filterNotes(searchTerm: String): List<Note> {
+        val filteredNoteList = notesList.filter {
+            (it.title.lowercase().contains(searchTerm.lowercase()))
+                    || (it.noteDec.lowercase().contains(searchTerm.lowercase()))
+        }
+        return filteredNoteList
     }
 }

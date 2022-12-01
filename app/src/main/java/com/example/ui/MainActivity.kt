@@ -13,8 +13,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.ui.Adapter.NotesAdapter
-import com.example.ViewModel.MainViewModel
+import com.example.ui.adapter.NotesAdapter
+import com.example.viewModel.MainViewModel
 import com.example.data.Note
 import com.example.notesapp.R
 import com.example.notesapp.databinding.ActivityMainBinding
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), NotesAdapter.NotesItemClickListener,
     }
 
     private fun initUI() {
-        notesAdapter = NotesAdapter(this, this)
+        notesAdapter = NotesAdapter(this)
         binding?.recyclerView?.apply {
             setHasFixedSize(true)
             layoutManager = StaggeredGridLayoutManager(2, LinearLayout.VERTICAL)
@@ -67,6 +67,8 @@ class MainActivity : AppCompatActivity(), NotesAdapter.NotesItemClickListener,
     private fun initObserver() {
         viewModel?.allNotes?.observe(this) { notesList ->
             notesList.let {
+                viewModel?.notesList?.clear()
+                viewModel?.notesList?.addAll(notesList)
                 notesAdapter?.updateList(notesList)
             }
         }
@@ -86,11 +88,17 @@ class MainActivity : AppCompatActivity(), NotesAdapter.NotesItemClickListener,
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
-                    notesAdapter?.filterList(newText)
+                    filterNotes(newText)
                 }
                 return true
             }
         })
+    }
+
+    private fun filterNotes(searchTerm: String) {
+        viewModel?.let {
+            notesAdapter?.updateList(it.filterNotes(searchTerm))
+        }
     }
 
     override fun onItemClicked(note: Note) {
