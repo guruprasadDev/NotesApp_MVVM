@@ -17,6 +17,9 @@ class AddNoteActivity : AppCompatActivity() {
     private var binding: ActivityAddNoteBinding? = null
     private var viewModel: AddNotesViewModel? = null
     private var isUpdate = false
+    private var noteColor: Int? = null
+    var noteBottomSheetFragment: NoteBottomSheetFragment? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,11 +40,17 @@ class AddNoteActivity : AppCompatActivity() {
             }
             isUpdate = true
         }
+
+        noteBottomSheetFragment = NoteBottomSheetFragment { noteColor ->
+            binding?.containerConstraintLayout?.setBackgroundColor(noteColor.color)
+            binding?.toolbar?.setBackgroundColor(noteColor.color)
+            this.noteColor = noteColor.color
+        }
     }
 
     private fun noteToUpdate(): Note? {
         return try {
-            intent.getSerializableExtra("current_note") as Note
+            intent.getSerializableExtra(EXTRA_CURRENT_NOTE) as Note
         } catch (e: Exception) {
             println("$e")
             null
@@ -53,9 +62,12 @@ class AddNoteActivity : AppCompatActivity() {
             imgCheck.setOnClickListener {
                 val title = editName.text.toString()
                 val noteMessage = editNote.text.toString()
+
                 viewModel?.apply {
+
                     if (validateNote(title, noteMessage)) {
-                        val newNote = Note(title = title, noteDec = noteMessage)
+                        val newNote =
+                            Note(title = title, noteDec = noteMessage, color = noteColor)
                         if (isUpdate) {
                             noteToUpdate()?.id?.let { noteId ->
                                 newNote.id = noteId
@@ -72,6 +84,13 @@ class AddNoteActivity : AppCompatActivity() {
             imgBackArrow.setOnClickListener {
                 onBackPressed()
             }
+
+            imgMore.setOnClickListener {
+                noteBottomSheetFragment?.show(
+                    supportFragmentManager,
+                    "Note Bottom  Fragment"
+                )
+            }
         }
     }
 
@@ -81,9 +100,17 @@ class AddNoteActivity : AppCompatActivity() {
 
     private fun setResultPostNoteUpdate(newNote: Note) {
         val intent = Intent()
-        intent.putExtra("isUpdate", isUpdate)
-        intent.putExtra("note", newNote)
+        intent.putExtra(EXTRA_IS_UPDATE, isUpdate)
+        intent.putExtra(EXTRA_NOTE, newNote)
+        intent.putExtra(EXTRA_COLOR,newNote.color)
         setResult(Activity.RESULT_OK, intent)
         finish()
+    }
+
+    companion object {
+        const val EXTRA_IS_UPDATE = "isUpdate"
+        const val EXTRA_NOTE = "note"
+        const val EXTRA_CURRENT_NOTE = "currentNote"
+        const val EXTRA_COLOR = "color"
     }
 }
