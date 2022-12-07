@@ -1,17 +1,16 @@
 package com.example.uitls
 
-import com.example.notesapp.R
-import kotlin.random.Random
+import android.graphics.Color
 
-fun randomColor(): Int {
-    val list = ArrayList<Int>()
-    list.add(R.color.Aqua)
-    list.add(R.color.green)
-    list.add(R.color.Blue)
-    list.add(R.color.Fuchsia)
-    list.add(R.color.Yellow)
-
-    val seed = System.currentTimeMillis().toInt()
-    val randomIndex = Random(seed).nextInt(list.size)
-    return list[randomIndex]
+enum class NoteColor(val color: Int) {
+    WHITE(Color.parseColor("#FFFFFF")),
+    BLACK(Color.parseColor("#000000")),
+    SILVER(Color.parseColor("#C0C0C0")),
+    GRAY(Color.parseColor("#808080")),
+    MAROON(Color.parseColor("#800000")),
+    RED(Color.parseColor("#FF0000")),
+    FUCHSIA(Color.parseColor("#FF00FF")),
+    GREEN(Color.parseColor("#008000")),
+    LIME(Color.parseColor("#00FF00")),
+    BLUE(Color.parseColor("#03A9F4")),
 }
