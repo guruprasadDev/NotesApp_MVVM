@@ -5,4 +5,7 @@
     <string name="date_txt">Date</string>
     <string name="title_hint">Title</string>
     <string name="start_typing_hint">Start Typing</string>
+    <string name="color_txt">Purple</string>
+    <string name="pick_color_txt">Pick Color</string>
+    <string name="delete_note_txt">Delete Note</string>
 </resources>
