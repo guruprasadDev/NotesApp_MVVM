@@ -1,5 +1,4 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
 
     <dimen name="padding_extra_small">4dp</dimen>
     <dimen name="padding_small">8dp</dimen>
@@ -47,7 +46,9 @@
     <dimen name="large_200dp">200dp</dimen>
     <dimen name="large_240dp">240dp</dimen>
     <dimen name="large_110dp">110dp</dimen>
+    <dimen name="large_100sdp">100sp</dimen>
 
+    <dimen name="lar_2sdp">2sp</dimen>
     <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="text_size_14sp">14sp</dimen>
     <dimen name="text_size_16sp">16sp</dimen>
