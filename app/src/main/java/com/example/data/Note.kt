@@ -9,7 +9,7 @@ import com.example.uitls.NoteColor
 data class Note(
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
     @ColumnInfo(name = "title") val title: String = "",
-    @ColumnInfo(name = "noteDec") val noteDec: String = "",
+    @ColumnInfo(name = "noteDescription") val noteDescription: String = "",
     @ColumnInfo(name = "date") val date: String = "",
-    @ColumnInfo(name = "color") var color: Int?
+    @ColumnInfo(name = "color") var color: String
 ) : java.io.Serializable
