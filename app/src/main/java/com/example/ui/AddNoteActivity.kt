@@ -2,14 +2,17 @@ package com.example.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.viewModel.AddNotesViewModel
 import com.example.data.Note
 import com.example.extensions.showToast
 import com.example.notesapp.databinding.ActivityAddNoteBinding
 import com.example.uitls.CommonUtils.getSimpleDateFormat
+import com.example.uitls.NoteColor
 import java.util.Date
 import kotlin.Exception
 
@@ -17,9 +20,8 @@ class AddNoteActivity : AppCompatActivity() {
     private var binding: ActivityAddNoteBinding? = null
     private var viewModel: AddNotesViewModel? = null
     private var isUpdate = false
-    private var noteColor: Int? = null
+    private var noteColor: String = NoteColor.WHITE.color
     var noteBottomSheetFragment: NoteBottomSheetFragment? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +30,9 @@ class AddNoteActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(AddNotesViewModel::class.java)
 
         initView()
+        initBottomSheet()
         initListener()
+        initObserver()
     }
 
     private fun initView() {
@@ -36,16 +40,22 @@ class AddNoteActivity : AppCompatActivity() {
         if (noteToUpdate != null) {
             binding?.apply {
                 editName.setText(noteToUpdate.title)
-                editNote.setText(noteToUpdate.noteDec)
+                editNote.setText(noteToUpdate.noteDescription)
+                updateBackgroundColor(noteToUpdate.color)
             }
             isUpdate = true
         }
+    }
 
-        noteBottomSheetFragment = NoteBottomSheetFragment { noteColor ->
-            binding?.containerConstraintLayout?.setBackgroundColor(noteColor.color)
-            binding?.toolbar?.setBackgroundColor(noteColor.color)
-            this.noteColor = noteColor.color
-        }
+    private fun initBottomSheet() {
+        noteBottomSheetFragment = NoteBottomSheetFragment()
+    }
+
+    private fun updateBackgroundColor(color: String) {
+        val noteBgColor = Color.parseColor(color)
+        binding?.containerConstraintLayout?.setBackgroundColor(noteBgColor)
+        binding?.toolbar?.setBackgroundColor(noteBgColor)
+        this.noteColor = color
     }
 
     private fun noteToUpdate(): Note? {
@@ -64,10 +74,9 @@ class AddNoteActivity : AppCompatActivity() {
                 val noteMessage = editNote.text.toString()
 
                 viewModel?.apply {
-
                     if (validateNote(title, noteMessage)) {
                         val newNote =
-                            Note(title = title, noteDec = noteMessage, color = noteColor)
+                            Note(title = title, noteDescription = noteMessage, color = noteColor)
                         if (isUpdate) {
                             noteToUpdate()?.id?.let { noteId ->
                                 newNote.id = noteId
@@ -94,6 +103,13 @@ class AddNoteActivity : AppCompatActivity() {
         }
     }
 
+    private fun initObserver() {
+        viewModel?.noteColorLiveData?.observe(this, Observer { noteColor ->
+            this.noteColor = noteColor.color
+            updateBackgroundColor(noteColor.color)
+        })
+    }
+
     private fun prepareNote(newNote: Note): Note {
         return newNote.copy(date = getSimpleDateFormat().format(Date()))
     }
@@ -102,7 +118,7 @@ class AddNoteActivity : AppCompatActivity() {
         val intent = Intent()
         intent.putExtra(EXTRA_IS_UPDATE, isUpdate)
         intent.putExtra(EXTRA_NOTE, newNote)
-        intent.putExtra(EXTRA_COLOR,newNote.color)
+        intent.putExtra(EXTRA_COLOR, newNote.color)
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
