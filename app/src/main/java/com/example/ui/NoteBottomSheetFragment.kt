@@ -1,9 +1,7 @@
 package com.example.ui
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.view.LayoutInflater
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.notesapp.databinding.FragmentNotesBottomSheetBinding
 import com.example.ui.adapter.ColorSelectedListener
@@ -17,7 +15,6 @@ class NoteBottomSheetFragment : BottomSheetDialogFragment() {
     private var colorsAdapter: ColorsAdapter? = null
     private lateinit var viewModel: AddNotesViewModel
 
-    @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog, style)
         binding = FragmentNotesBottomSheetBinding.inflate(LayoutInflater.from(context))
