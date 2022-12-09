@@ -18,6 +18,9 @@ import com.example.viewModel.MainViewModel
 import com.example.data.Note
 import com.example.notesapp.R
 import com.example.notesapp.databinding.ActivityMainBinding
+import com.example.ui.AddNoteActivity.Companion.EXTRA_CURRENT_NOTE
+import com.example.ui.AddNoteActivity.Companion.EXTRA_IS_UPDATE
+import com.example.ui.AddNoteActivity.Companion.EXTRA_NOTE
 
 class MainActivity : AppCompatActivity(), NotesAdapter.NotesItemClickListener,
     PopupMenu.OnMenuItemClickListener {
@@ -29,8 +32,8 @@ class MainActivity : AppCompatActivity(), NotesAdapter.NotesItemClickListener,
     private val getActivityLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val note = result.data?.getSerializableExtra("note") as? Note
-                val isUpdate = result.data?.getBooleanExtra("isUpdate", false) ?: false
+                val note = result.data?.getSerializableExtra(EXTRA_NOTE) as? Note
+                val isUpdate = result.data?.getBooleanExtra(EXTRA_IS_UPDATE, false) ?: false
                 if (note != null) {
                     if (isUpdate) {
                         viewModel?.updateNote(note)
@@ -103,7 +106,7 @@ class MainActivity : AppCompatActivity(), NotesAdapter.NotesItemClickListener,
 
     override fun onItemClicked(note: Note) {
         val intent = Intent(this@MainActivity, AddNoteActivity::class.java)
-        intent.putExtra("current_note", note)
+        intent.putExtra(EXTRA_CURRENT_NOTE, note)
         getActivityLauncher.launch(intent)
     }
 

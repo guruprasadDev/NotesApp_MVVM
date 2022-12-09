@@ -36,7 +36,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun filterNotes(searchTerm: String): List<Note> {
         val filteredNoteList = notesList.filter {
             (it.title.lowercase().contains(searchTerm.lowercase()))
-                    || (it.noteDec.lowercase().contains(searchTerm.lowercase()))
+                    || (it.noteDescription.lowercase().contains(searchTerm.lowercase()))
         }
         return filteredNoteList
     }
